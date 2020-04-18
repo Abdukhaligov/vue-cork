@@ -1,28 +1,61 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <NavBar />
+    <ToDoList />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
 
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
+  import './assets/assets/css33d1.css?family=Nunito:400,600,700';
+  import './assets/bootstrap/css/bootstrap.min.css';
+  import './assets/assets/css/plugins.css';
+  import './assets/plugins/editors/quill/quill.snow.css';
+  import './assets/assets/css/apps/todolist.css';
+
+  import $ from 'jquery'
+  import 'popper.js';
+  import 'bootstrap'
+  import './assets/assets/js/ie11fix/fn.fix-padStart.js';
+
+
+  import NavBar from './components/NavBar.vue'
+  import ToDoList from './components/ToDoList.vue'
+
+  export default {
+    rules:{
+        'no-unused-vars': 'off'
+    },
+    name: 'App',
+    components: {
+      NavBar,
+      ToDoList,
+    },
+    mounted() {
+
+      $('.scrollTop').click(function () {
+        $("html, body").animate({scrollTop: 0});
+      });
+
+
+      $('.navbar .dropdown.notification-dropdown > .dropdown-menu, .navbar .dropdown.message-dropdown > .dropdown-menu ').click(function (e) {
+        e.stopPropagation();
+      });
+
+      $('.bs-tooltip').tooltip();
+
+      $('.bs-popover').popover();
+
+
+      $('.t-dot').tooltip({
+        template: '<div class="tooltip status rounded-tooltip" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
+      });
+
+
+    }
   }
-}
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
 </style>
