@@ -403,8 +403,13 @@
                   <div id="ct" class="todo-box-scroll">
 
                     <div v-for="item in todo" :key="item.id"
-                         class="todo-item"
-                         :class="item.cssClasses"
+                         :id="'todo'+item.id"
+                         :class="[
+                           'todo-item',
+                           item.trash ? 'todo-task-trash' : 'all-list',
+                           item.important ? 'todo-task-important' : '',
+                           item.done ? 'todo-task-done' : '',
+                           ]"
                     >
                       <div class="todo-item-inner">
                         <div class="n-chk text-center">
@@ -418,8 +423,8 @@
                           <h5 class="todo-heading" :data-todoHeading="item.heading">{{ item.heading }}</h5>
                           <p class="meta-date">{{ item.date }}</p>
                           <p class="todo-text"
-                             :data-todoHtml="'<p>'+ item.text +'</p>'"
-                             :data-todoText="item.textAttr">
+                             :data-todoHtml="item.dataHtml"
+                             :data-todoText="JSON.stringify(item.dataText)">
                             {{ item.text }}
                           </p>
                         </div>
@@ -635,54 +640,55 @@
     name: "ToDoList",
     data: function () {
       return {
+        todoNextId: 5,
         todo:[
-          {
-            id: 0,
-            heading: "Meet Lisa to discuss project details",
-            date: "Aug, 05 2019",
-            text: "Nam consectetur, nunc vitae convallis fermentum, libero urna laoreet felis, sed euismod tellus nulla nec quam. Etiam sit amet erat eu ante euismod lacinia. Cras id pretium tellus. Fusce ac ex eros. Quisque id ipsum diam. Pellentesque elementum eros vel viverra condimentum. Proin at fermentum tortor. Maecenas eu varius eros, quis accumsan lectus. Aliquam erat volutpat. Phasellus nec diam nec dolor eleifend tincidunt vitae sed purus. Sed sed ipsum eu arcu condimentum malesuada non quis risus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque facilisis risus a velit tincidunt aliquam. Donec rutrum lectus in diam pellentesque tempor. Aliquam porttitor velit at massa fermentum, cursus lacinia felis porta.",
-            done: false,
-            important: false,
-            removed: false,
-            priority: "primary",
-            textAttr: "{\"ops\":[{\"insert\":\"Nam consectetur, nunc vitae convallis fermentum, libero urna laoreet felis, sed euismod tellus nulla nec quam. Etiam sit amet erat eu ante euismod lacinia. Cras id pretium tellus. Fusce ac ex eros. Quisque id ipsum diam. Pellentesque elementum eros vel viverra condimentum. Proin at fermentum tortor. Maecenas eu varius eros, quis accumsan lectus. Aliquam erat volutpat. Phasellus nec diam nec dolor eleifend tincidunt vitae sed purus. Sed sed ipsum eu arcu condimentum malesuada non quis risus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque facilisis risus a velit tincidunt aliquam. Donec rutrum lectus in diam pellentesque tempor. Aliquam porttitor velit at massa fermentum, cursus lacinia felis porta.\\n\"}]}",
-            cssClasses: "all-list",
-          },
           {
             id: 1,
             heading: "Meet Lisa to discuss project details",
-            date: "May, 04 2059",
-            text: "Nullam sollicitudin id nisi at mollis. Integer pellentesque enim purus, consectetur accumsan urna rhoncus sit amet. Suspendisse hendrerit ipsum sed porttitor ornare. Sed pharetra turpis sed interdum suscipit. Sed congue hendrerit faucibus. Donec blandit maximus enim sed vestibulum. Duis mollis quis ligula id auctor. Suspendisse potenti. Nulla faucibus dictum ornare. Sed a ullamcorper diam. Nullam gravida laoreet magna vitae condimentum. Ut at imperdiet magna, id interdum neque. Vivamus viverra magna eu ante efficitur porta. Maecenas dolor diam, ullamcorper molestie purus sit amet, lobortis accumsan risus. Nullam id molestie diam. Suspendisse sed dictum urna.",
-            done: true,
-            important: true,
-            removed: false,
-            priority: "warning",
-            textAttr: "{\"ops\":[{\"insert\":\"Nullam sollicitudin id nisi at mollis. Integer pellentesque enim purus, consectetur accumsan urna rhoncus sit amet. Suspendisse hendrerit ipsum sed porttitor ornare. Sed pharetra turpis sed interdum suscipit. Sed congue hendrerit faucibus. Donec blandit maximus enim sed vestibulum. Duis mollis quis ligula id auctor. Suspendisse potenti. Nulla faucibus dictum ornare. Sed a ullamcorper diam. Nullam gravida laoreet magna vitae condimentum. Ut at imperdiet magna, id interdum neque. Vivamus viverra magna eu ante efficitur porta. Maecenas dolor diam, ullamcorper molestie purus sit amet, lobortis accumsan risus. Nullam id molestie diam. Suspendisse sed dictum urna.\\n\"}]}",
-            cssClasses: "all-list todo-task-done todo-task-important"
+            date: "Aug, 05 2019",
+            text: "Nam consectipsum s lacinia felis porta.",
+            dataHtml: "<p>Nam consectipsum s lacinia felis porta.</p>",
+            dataText: {ops:[{insert:"Nam consectipsum s lacinia felis porta."}]},
+            done: false,
+            important: false,
+            trash: false,
+            priority: "primary",
           },
           {
             id: 2,
             heading: "Meet Lisa to discuss project details",
             date: "May, 04 2059",
-            text: "Nunc fringilla euismod odio ut sollicitudin. Morbi vulputate eros in ligula condimentum ullamcorper. Sed in ligula quam. Integer tincidunt mauris est, vitae elementum ipsum viverra ut. Ut vel enim consequat eros pretium ornare a vitae sapien. Nullam quis odio orci. Ut erat elit, posuere sed arcu rhoncus, auctor varius augue. Ut porta odio quis ornare tincidunt. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id lacus pellentesque felis pharetra pulvinar. Pellentesque velit massa, pulvinar et viverra non, vehicula a est. Sed egestas, arcu vestibulum sollicitudin porttitor, quam est varius tellus, nec placerat ipsum justo accumsan leo. Pellentesque fermentum arcu ligula, vel efficitur erat ultricies in. Mauris hendrerit massa a sem dignissim, sed scelerisque tellus rhoncus. Sed molestie vel felis eget maximus. Aenean cursus mauris elit, et finibus orci ultrices vel.",
-            done: false,
+            text: "Nullam sollicitpurus,trllamcorplestie diam. Suspendisse sed dictum urna.",
+            dataHtml: "<p>Nullam sollicitpurus,trllamcorplestie diam. Suspendisse sed dictum urna.</p>",
+            dataText: {ops:[{insert:"Nullam sollicitpurus,trllamcorplestie diam. Suspendisse sed dictum urna."}]},
+            done: true,
             important: true,
-            removed: false,
-            priority: "primary",
-            textAttr: "{\"ops\":[{\"insert\":\"Nunc fringilla euismod odio ut sollicitudin. Morbi vulputate eros in ligula condimentum ullamcorper. Sed in ligula quam. Integer tincidunt mauris est, vitae elementum ipsum viverra ut. Ut vel enim consequat eros pretium ornare a vitae sapien. Nullam quis odio orci. Ut erat elit, posuere sed arcu rhoncus, auctor varius augue. Ut porta odio quis ornare tincidunt. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id lacus pellentesque felis pharetra pulvinar. Pellentesque velit massa, pulvinar et viverra non, vehicula a est. Sed egestas, arcu vestibulum sollicitudin porttitor, quam est varius tellus, nec placerat ipsum justo accumsan leo. Pellentesque fermentum arcu ligula, vel efficitur erat ultricies in. Mauris hendrerit massa a sem dignissim, sed scelerisque tellus rhoncus. Sed molestie vel felis eget maximus. Aenean cursus mauris elit, et finibus orci ultrices vel.\\n\"}]}",
-            cssClasses: "all-list todo-task-important"
+            trash: false,
+            priority: "warning",
           },
           {
             id: 3,
-            heading: "AAAAMeet Lisa to discuss project details",
+            heading: "Meet Lisa to discuss project details",
             date: "May, 04 2059",
-            text: "Nunc fringilla euismod odio ut sollicitudin. Morbi vulputate eros in ligula condimentum ullamcorper. Sed in ligula quam. Integer tincidunt mauris est, vitae elementum ipsum viverra ut. Ut vel enim consequat eros pretium ornare a vitae sapien. Nullam quis odio orci. Ut erat elit, posuere sed arcu rhoncus, auctor varius augue. Ut porta odio quis ornare tincidunt. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id lacus pellentesque felis pharetra pulvinar. Pellentesque velit massa, pulvinar et viverra non, vehicula a est. Sed egestas, arcu vestibulum sollicitudin porttitor, quam est varius tellus, nec placerat ipsum justo accumsan leo. Pellentesque fermentum arcu ligula, vel efficitur erat ultricies in. Mauris hendrerit massa a sem dignissim, sed scelerisque tellus rhoncus. Sed molestie vel felis eget maximus. Aenean cursus mauris elit, et finibus orci ultrices vel.",
+            text: "Aenean cursus mauris elit, et finibus orci ultrices vel.",
+            dataHtml: "<p>Aenean cursus mauris elit, et finibus orci ultrices vel.</p>",
+            dataText: {ops:[{insert:"Aenean cursus mauris elit, et finibus orci ultrices vel."}]},
             done: false,
             important: true,
-            removed: true,
+            trash: false,
+            priority: "primary",
+          },
+          {
+            id: 4,
+            heading: "AAAAMeet Lisa to discuss project details",
+            date: "May, 04 2059",
+            text: "Aenean cursus mauris elit, et finibus orci ultrices vel.",
+            dataHtml: "<p>Aenean cursus mauris elit, et finibus orci ultrices vel.</p>",
+            dataText: {ops:[{insert:"Aenean cursus mauris elit, et finibus orci ultrices vel"}]},
+            done: false,
+            important: true,
+            trash: true,
             priority: "danger",
-            textAttr: "{\"ops\":[{\"insert\":\"Nunc fringilla euismod odio ut sollicitudin. Morbi vulputate eros in ligula condimentum ullamcorper. Sed in ligula quam. Integer tincidunt mauris est, vitae elementum ipsum viverra ut. Ut vel enim consequat eros pretium ornare a vitae sapien. Nullam quis odio orci. Ut erat elit, posuere sed arcu rhoncus, auctor varius augue. Ut porta odio quis ornare tincidunt. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id lacus pellentesque felis pharetra pulvinar. Pellentesque velit massa, pulvinar et viverra non, vehicula a est. Sed egestas, arcu vestibulum sollicitudin porttitor, quam est varius tellus, nec placerat ipsum justo accumsan leo. Pellentesque fermentum arcu ligula, vel efficitur erat ultricies in. Mauris hendrerit massa a sem dignissim, sed scelerisque tellus rhoncus. Sed molestie vel felis eget maximus. Aenean cursus mauris elit, et finibus orci ultrices vel.\\n\"}]}",
-            cssClasses: "todo-task-trash todo-task-important"
           }
         ]
       }
@@ -709,9 +715,6 @@
       function dynamicBadgeNotification(setTodoCategoryCount) {
         let todoCategoryCount = setTodoCategoryCount;
 
-        // Get Parents Div(s)
-        let get_ParentsDiv = $('.todo-item');
-        console.log(get_ParentsDiv);
         let get_TodoAllListParentsDiv = $('.todo-item.all-list');
         let get_TodoCompletedListParentsDiv = $('.todo-item.todo-task-done');
         let get_TodoImportantListParentsDiv = $('.todo-item.todo-task-important');
@@ -781,12 +784,6 @@
       new dynamicBadgeNotification('completedList');
       new dynamicBadgeNotification('importantList');
 
-      /*
-        ====================
-          Quill Editor
-        ====================
-      */
-
       let quill = new Quill('#taskdescription', {
         modules: {
           toolbar: [
@@ -808,7 +805,6 @@
 
         quill.deleteText(0, 2000);
 
-        console.log('message added')
       })
       $('.mail-menu').on('click', function () {
         $('.tab-title').addClass('mail-menu-show');
@@ -834,14 +830,21 @@
         suppressScrollX: true
       });
 
-
       function checkCheckbox() {
         $('.todo-item input[type="checkbox"]').click(function () {
+          let done;
           if ($(this).is(":checked")) {
             $(this).parents('.todo-item').addClass('todo-task-done');
+            done = true;
           } else if ($(this).is(":not(:checked)")) {
             $(this).parents('.todo-item').removeClass('todo-task-done');
+            done = false;
           }
+          let temp = {
+            id: ($(this).parents('.todo-item').attr('id')).substr(4),
+            done: done
+          };
+          console.log(temp);
           new dynamicBadgeNotification('completedList');
         });
       }
@@ -870,6 +873,12 @@
           } else if ($(this).parents('.todo-item').hasClass('todo-task-trash')) {
             $(this).parents('.todo-item').removeClass('todo-task-trash');
           }
+
+          let temp = {
+            id: ($(this).parents('.todo-item').attr('id')).substr(4),
+            trash: true
+          };
+          console.log(temp);
           new dynamicBadgeNotification('allList');
           new dynamicBadgeNotification('completedList');
           new dynamicBadgeNotification('importantList');
@@ -882,6 +891,12 @@
           if ($(this).parents('.todo-item').hasClass('todo-task-trash')) {
             $(this).parents('.todo-item').remove();
           }
+
+          let temp = {
+            id: ($(this).parents('.todo-item').attr('id')).substr(4),
+            remove: true
+          };
+          console.log(temp);
         });
       }
 
@@ -895,6 +910,12 @@
             $(this).parents('.todo-item').removeClass(getFirstClass);
             $(this).parents('.todo-item').addClass('all-list');
             $(this).parents('.todo-item').hide();
+
+            let temp = {
+              id: ($(this).parents('.todo-item').attr('id')).substr(4),
+              trash: false
+            };
+            console.log(temp);
           }
           new dynamicBadgeNotification('allList');
           new dynamicBadgeNotification('completedList');
@@ -904,14 +925,24 @@
 
       function importantDropdown() {
         $('.important').click(function () {
+          let important;
           if (!$(this).parents('.todo-item').hasClass('todo-task-important')) {
             $(this).parents('.todo-item').addClass('todo-task-important');
             $(this).html('Back to List');
+            important = true;
           } else if ($(this).parents('.todo-item').hasClass('todo-task-important')) {
             $(this).parents('.todo-item').removeClass('todo-task-important');
             $(this).html('Important');
             $(".list-actions#all-list").trigger('click');
+            important = false;
           }
+
+          let temp = {
+            id: ($(this).parents('.todo-item').attr('id')).substr(4),
+            important: important
+          };
+          console.log(temp);
+
           new dynamicBadgeNotification('importantList');
         });
       }
@@ -924,6 +955,15 @@
           $(this).parents('.p-dropdown').children('.dropdown-toggle').removeClass(getDropdownClass);
 
           $(this).parents('.p-dropdown').children('.dropdown-toggle').addClass(getClass);
+
+          let temp = {
+            id: ($(this).parents('.p-dropdown')
+              .parents('.priority-dropdown')
+              .parents('.todo-item-inner')
+              .parents('.todo-item').attr('id')).substr(4),
+            priority: getClass
+          };
+          console.log(temp);
         })
       }
 
@@ -941,17 +981,13 @@
           let $_taskText = $_outerThis.parents('.todo-item').children().find('.todo-text').attr('data-todoText');
           let $_taskJson = JSON.parse($_taskText);
 
+
           $('#task').val($_taskTitle);
           quill.setContents($_taskJson);
 
           $('.edit-tsk').off('click').on('click', function () {
-            let $_innerThis = $(this);
-            console.log("$_innerThis");
-            console.log($_innerThis);
+
             let $_task = document.getElementById('task').value;
-            let $_taskDescription = document.getElementById('taskdescription').value;
-            console.log("$_taskDescription");
-            console.log($_taskDescription);
 
             let today = new Date();
             let dd = String(today.getDate()).padStart(2, '0');
@@ -960,7 +996,6 @@
             let monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
             today = monthNames[mm] + ', ' + dd + ' ' + yyyy;
-
 
             let $_taskDescriptionText = quill.getText();
             let $_taskDescriptionInnerHTML = quill.root.innerHTML;
@@ -978,15 +1013,18 @@
             $_outerThis.parents('.todo-item').children().find('.todo-text').html(trimmedString);
             $_outerThis.parents('.todo-item').children().find('.meta-date').html(today);
 
-            let $_taskEditedTitleDataAttr = $_outerThis.parents('.todo-item').children().find('.todo-heading').attr('data-todoHeading', $_task);
-            let $_taskEditedTextDataAttr = $_outerThis.parents('.todo-item').children().find('.todo-text').attr('data-todoText', $_textDelta);
-            $_taskEditedTextDataAttr = $_outerThis.parents('.todo-item').children().find('.todo-text').attr('data-todoHtml', $_taskDescriptionInnerHTML);
+            $_outerThis.parents('.todo-item').children().find('.todo-heading').attr('data-todoHeading', $_task);
+            $_outerThis.parents('.todo-item').children().find('.todo-text').attr('data-todoText', $_textDelta);
+            $_outerThis.parents('.todo-item').children().find('.todo-text').attr('data-todoHtml', $_taskDescriptionInnerHTML);
 
-            console.log("$_taskEditedTitleDataAttr");
-            console.log($_taskEditedTitleDataAttr);
-            console.log("$_taskEditedTextDataAttr");
-            console.log($_taskEditedTextDataAttr);
-
+            let temp = {
+              id: ($_outerThis.parents('.todo-item').attr('id')).substr(4),
+              heading: $_task,
+              text: trimmedString,
+              dataHtml: $_taskDescriptionInnerHTML,
+              dataText: $_textDelta,
+            };
+            console.log(temp);
 
             $('#addTaskModal').modal('hide');
           });
@@ -1032,6 +1070,8 @@
       editDropdown();
       todoItem();
 
+      const todoNextId = this.todoNextId;
+
       $(".add-tsk").click(function () {
         let today = new Date();
         let dd = String(today.getDate()).padStart(2, '0');
@@ -1047,6 +1087,15 @@
 
         let delta = quill.getContents();
         let $_textDelta = JSON.stringify(delta);
+
+        let temp = {
+          id: todoNextId,
+          heading: $_task,
+          text: $_taskDescriptionText,
+          dataHtml: $_taskDescriptionInnerHTML,
+          dataText: $_textDelta,
+        };
+        console.log(temp);
 
         let $html = '<div class="todo-item all-list">' +
           '<div class="todo-item-inner">' +
